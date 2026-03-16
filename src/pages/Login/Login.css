@@ -1,0 +1,242 @@
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Left Section */
+.login-form-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    background-color: var(--white);
+}
+
+.login-form-wrapper {
+    margin: auto;
+    max-width: 440px;
+    width: 100%;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 5rem;
+}
+
+.login-header {
+    margin-bottom: 2.5rem;
+}
+
+.welcome-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-subtitle {
+    font-size: 1rem;
+    color: var(--text-light);
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    padding-right: 3rem;
+    /* Leave space for icon */
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 1rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle-btn:hover {
+    color: var(--primary-color);
+}
+
+.login-btn {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.signup-link-text {
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+/* Right Section - Hero Area */
+.login-hero-section {
+    flex: 1.2;
+    background-color: #F8F5FF;
+    /* Light purple tint */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Abstract Background Shapes mimicking the screenshot */
+.login-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 250px;
+    background-color: var(--primary-color);
+    border-bottom-right-radius: 60px;
+    z-index: 0;
+}
+
+.login-hero-section::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    right: -50px;
+    width: 250px;
+    height: 300px;
+    border: 24px solid var(--primary-color);
+    border-radius: 60px;
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    width: 80%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.hero-card {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl);
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+}
+
+.hero-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Tracking Card */
+.tracking-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
+}
+
+.hero-icon-bg {
+    background-color: var(--primary-color);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tracking-text p {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.tracking-text h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Transaction Chart Card */
+.transaction-card {
+    margin-top: 2rem;
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.transaction-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.transaction-header p {
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.view-more-btn {
+    background-color: #F3EEFF;
+    color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.chart-preview {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 140px;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.chart-bar {
+    flex: 1;
+    background-color: #E6D8FF;
+    border-radius: 4px;
+    position: relative;
+}
+
+.chart-bar .bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+}
+
+.chart-bar.active .bar-fill {
+    background-color: #5B21B6;
+    /* Darker purple */
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .login-hero-section {
+        display: none;
+    }
+}
