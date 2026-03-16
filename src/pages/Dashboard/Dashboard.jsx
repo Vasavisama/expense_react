@@ -8,8 +8,10 @@ import {
     CreditCard,
     TrendingUp,
     TrendingDown,
-    Plus
+    Plus,
+    Zap
 } from 'lucide-react';
+import AIInsightsCard from '../../components/AIInsightsCard';
 import {
     PieChart,
     Pie,
@@ -182,6 +184,13 @@ const Dashboard = () => {
                     >
                         <Receipt size={20} />
                         Expense
+                    </button>
+                    <button
+                        className={`nav-item ${activeTab === 'insights' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('insights')}
+                    >
+                        <Zap size={20} />
+                        AI Insights
                     </button>
                 </nav>
 
@@ -370,6 +379,10 @@ const Dashboard = () => {
                             )}
                         </div>
                     </div>
+                )}
+
+                {activeTab === 'insights' && (
+                    <AIInsightsCard user={user} token={localStorage.getItem('token')} />
                 )}
             </main>
 

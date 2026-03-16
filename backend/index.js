@@ -10,6 +10,7 @@ const app = express();
 app.use(cors()); // Allow frontend to communicate first
 app.use(express.json({ limit: '10mb' })); // Increase limit for base64 images
 
+
 const newschema = new mongoose.Schema({
     email: { // Changed from userid to email
         required: true,
@@ -55,6 +56,8 @@ const transactionSchema = new mongoose.Schema({
 });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
+
+const financialInsightsRoutes = require('./routes/financialInsightsRoutes');
 
 const connectDB = async () => {
     try {
@@ -257,6 +260,10 @@ app.get('/profiles', auth, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 8000;
+
+// AI Insights Routes
+app.use('/api/ai', auth, financialInsightsRoutes);
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
