@@ -253,6 +253,46 @@
     color: #EF4444;
 }
 
+.t-actions-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.t-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--border-radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+}
+
+.action-btn.edit-btn {
+    color: #3B82F6;
+}
+
+.action-btn.edit-btn:hover {
+    background-color: #EFF6FF;
+}
+
+.action-btn.delete-btn {
+    color: #EF4444;
+}
+
+.action-btn.delete-btn:hover {
+    background-color: #FEF2F2;
+}
+
 /* Tab Content */
 .tab-content {
     background: var(--white);

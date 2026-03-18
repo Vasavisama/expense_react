@@ -9,7 +9,9 @@ import {
     TrendingUp,
     TrendingDown,
     Plus,
-    Zap
+    Zap,
+    Edit2,
+    Trash2
 } from 'lucide-react';
 import AIInsightsCard from '../../components/AIInsightsCard';
 import {
@@ -37,6 +39,7 @@ const Dashboard = () => {
     const [modalType, setModalType] = useState('income');
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState('');
+    const [editId, setEditId] = useState(null);
 
     useEffect(() => {
         let token = localStorage.getItem('token');
@@ -96,40 +99,94 @@ const Dashboard = () => {
         navigate('/login');
     };
 
-    const handleAddTransaction = async (e) => {
+    const handleSaveTransaction = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch('http://localhost:8000/transactions', {
-                method: 'POST',
+            let endpoint = '';
+            let payload = {};
+
+            if (editId) {
+                // UPDATE
+                if (modalType === 'income') {
+                    endpoint = `http://localhost:8000/api/income/update-income/${editId}`;
+                    payload = { source: category, amount: Number(amount) };
+                } else {
+                    endpoint = `http://localhost:8000/api/expense/update-expense/${editId}`;
+                    payload = { category, amount: Number(amount) };
+                }
+            } else {
+                // CREATE
+                if (modalType === 'income') {
+                    endpoint = `http://localhost:8000/api/income/add-income`;
+                    payload = { source: category, amount: Number(amount) };
+                } else {
+                    endpoint = `http://localhost:8000/api/expense/add-expense`;
+                    payload = { category, amount: Number(amount) };
+                }
+            }
+
+            const res = await fetch(endpoint, {
+                method: editId ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    type: modalType,
-                    amount: Number(amount),
-                    category,
-                    description: `${modalType} added`
-                })
+                body: JSON.stringify(payload)
             });
 
             if (res.ok) {
-                setShowModal(false);
-                setAmount('');
-                setCategory('');
+                closeModal();
                 fetchSummary(token);
                 fetchTransactions(token, activeTab); // Refresh
-
             } else {
                 const errorData = await res.json();
-                console.error('Failed to add transaction (res not ok)', errorData);
-                alert('Failed to add transaction: ' + (errorData.message || errorData.error));
+                console.error('Failed to save transaction', errorData);
+                alert('Failed to save transaction: ' + (errorData.message || errorData.error));
             }
         } catch (error) {
-            console.error('Failed to add transaction (caught error)', error);
+            console.error('Failed to save transaction (caught error)', error);
             alert('Error connecting to server. Is it running?');
         }
+    };
+
+    const handleDelete = async (id, transactionType) => {
+        if (!window.confirm(`Are you sure you want to delete this ${transactionType}?`)) return;
+        const token = localStorage.getItem('token');
+        try {
+            const endpoint = transactionType === 'income' 
+                ? `http://localhost:8000/api/income/delete-income/${id}` 
+                : `http://localhost:8000/api/expense/delete-expense/${id}`;
+            
+            const res = await fetch(endpoint, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                fetchSummary(token);
+                fetchTransactions(token, activeTab);
+            } else {
+                alert('Failed to delete transaction');
+            }
+        } catch(error) {
+            console.error('Delete error', error);
+        }
+    };
+
+    const openEditModal = (transaction) => {
+        setModalType(transaction.type);
+        setCategory(transaction.category);
+        setAmount(transaction.amount);
+        setEditId(transaction._id);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+        setAmount('');
+        setCategory('');
+        setEditId(null);
     };
 
     // Derived statistics from the backend summary
@@ -343,8 +400,14 @@ const Dashboard = () => {
                                                 <p>{new Date(t.date).toLocaleDateString()}</p>
                                             </div>
                                         </div>
-                                        <div className="t-amount income">
-                                            + ${t.amount.toLocaleString()}
+                                        <div className="t-actions-container">
+                                            <div className="t-amount income">
+                                                + ${t.amount.toLocaleString()}
+                                            </div>
+                                            <div className="t-buttons">
+                                                <button onClick={() => openEditModal(t)} className="action-btn edit-btn" title="Edit"><Edit2 size={16}/></button>
+                                                <button onClick={() => handleDelete(t._id, 'income')} className="action-btn delete-btn" title="Delete"><Trash2 size={16}/></button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))
@@ -371,8 +434,14 @@ const Dashboard = () => {
                                                 <p>{new Date(t.date).toLocaleDateString()}</p>
                                             </div>
                                         </div>
-                                        <div className="t-amount expense">
-                                            - ${t.amount.toLocaleString()}
+                                        <div className="t-actions-container">
+                                            <div className="t-amount expense">
+                                                - ${t.amount.toLocaleString()}
+                                            </div>
+                                            <div className="t-buttons">
+                                                <button onClick={() => openEditModal(t)} className="action-btn edit-btn" title="Edit"><Edit2 size={16}/></button>
+                                                <button onClick={() => handleDelete(t._id, 'expense')} className="action-btn delete-btn" title="Delete"><Trash2 size={16}/></button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))
@@ -390,8 +459,8 @@ const Dashboard = () => {
             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h2>Add {modalType === 'income' ? 'Income' : 'Expense'}</h2>
-                        <form onSubmit={handleAddTransaction}>
+                        <h2>{editId ? 'Edit' : 'Add'} {modalType === 'income' ? 'Income' : 'Expense'}</h2>
+                        <form onSubmit={handleSaveTransaction}>
                             <div className="form-group">
                                 <label>Category</label>
                                 <input
@@ -416,7 +485,7 @@ const Dashboard = () => {
                                 />
                             </div>
                             <div className="modal-actions">
-                                <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                                <button type="button" className="btn-secondary" onClick={closeModal}>Cancel</button>
                                 <button type="submit" className="btn-primary">Save</button>
                             </div>
                         </form>

@@ -58,6 +58,8 @@ const transactionSchema = new mongoose.Schema({
 const Transaction = mongoose.model('Transaction', transactionSchema);
 
 const financialInsightsRoutes = require('./routes/financialInsightsRoutes');
+const incomeRoutes = require('./routes/incomeRoutes');
+const expenseRoutes = require('./routes/expenseRoutes');
 
 const connectDB = async () => {
     try {
@@ -261,8 +263,10 @@ app.get('/profiles', auth, async (req, res) => {
 
 const PORT = process.env.PORT || 8000;
 
-// AI Insights Routes
+// API Routes
 app.use('/api/ai', auth, financialInsightsRoutes);
+app.use('/api/income', auth, incomeRoutes);
+app.use('/api/expense', auth, expenseRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
